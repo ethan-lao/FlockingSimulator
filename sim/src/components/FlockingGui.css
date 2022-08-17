@@ -1,0 +1,28 @@
+p {
+    font-size: large;
+}
+
+.params {
+    margin-bottom: 10px;
+    padding: 0px;
+}
+
+.play-pause {
+    margin-top: 0px;
+    padding: 0px;
+}
+
+.buttons {
+    margin-bottom: 20px;
+    padding: 0px;
+}
+
+#holder {
+    text-align: center;
+}
+
+#svg-sim {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
