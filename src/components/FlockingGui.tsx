@@ -1,5 +1,5 @@
 import './FlockingGui.css';
-import { Button, Slider, Grid, Container, Select, MenuItem} from '@mui/material';
+import { Button, Slider, Grid, Container } from '@mui/material';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -7,7 +7,6 @@ import React from 'react';
 import { vec3, FlockingSim } from './FlockingSim.tsx';
 
 import * as d3 from "d3";
-import { _3d } from 'd3-3d';
 
 const aspectRatio = 1.0 / 2.5;
 const width = 1000;
@@ -476,10 +475,10 @@ class FlockingGui extends React.Component {
       this.makeView();
     }
 
-    if (this.state.numBirds !== prevState.numBirds || 
+    if ((this.state.numBirds !== prevState.numBirds || 
       this.state.numPredators !== prevState.numPredators || 
       this.state.groups !== prevState.groups || 
-      this.state.resetPoints && !prevState.resetPoints) {
+      this.state.resetPoints) && !prevState.resetPoints) {
       this.setupPoints()
       this.setState({resetPoints: false});
     } else {

@@ -256,7 +256,8 @@ class FlockingSim {
 
         let avgs = []
         let count = [];
-        for (let d of this.dests) {
+
+        for (let d = 0; d < this.dests.length; d++) {
             avgs.push(new vec3(0, 0, 0))
             count.push(0)
         }
@@ -272,7 +273,7 @@ class FlockingSim {
 
         let newDests = []
         for (let i = 0; i < avgs.length; i++) {
-            if (count[i] == 0) {
+            if (count[i] === 0) {
                 newDests.push(this.dests[i])
             }
 
@@ -394,7 +395,7 @@ class FlockingSim {
                             }
 
                             // skip the rest if in different group
-                            if (bird.group == b.group) {
+                            if (bird.group === b.group) {
                                 avgPos.updateAdd(b.pos);
                                 avgDir.updateAdd(b.dir);
                                 numInRange += 1;
