@@ -9,30 +9,18 @@ import { vec3, FlockingSim } from './FlockingSim.tsx';
 import * as d3 from "d3";
 
 const aspectRatio = 1.0 / 2.5;
-const width = 1000;
-const height = width * aspectRatio;
 const margin = 70;
 const depth = 600;
 const radRange = [5, 10]
-
-// const timestep = 1;
 const timestep = 1;
 
 const defaultNumBirds = 100;
-// const defaultSeparation = 50;
-// const defaultAlignment = 50;
-// const defaultCohesion = 50;
-// const defaultMomentum = 50;
-// const defaultLightAttraction = 50;
-// const defaultVisualRange = width / 6;
 const defaultSeparation = 5;
 const defaultAlignment = 5;
 const defaultCohesion = 5;
 const defaultMomentum = 5;
 const defaultLightAttraction = 5;
-const defaultVisualRange = width / 12;
 const defaultNumPredators = 0;
-const defaultPredVisualRange = width / 12;
 const defaultFear = 5;
 const defaultPredSpeed = 200;
 const defaultGroups = 1;
@@ -49,6 +37,11 @@ const birdColors = [
 // const defaultNumObstacles = 0;
 
 class FlockingGui extends React.Component {
+  width = 1000;
+  height = this.width * aspectRatio;
+  defaultVisualRange = this.width / 12;
+  defaultPredVisualRange = this.width / 12;
+  
   state = {
     resetPoints: false,
     createView: false,
@@ -60,12 +53,12 @@ class FlockingGui extends React.Component {
     cohesion: defaultCohesion,
     momentum: defaultMomentum,
     lightAttraction: defaultLightAttraction,
-    visualRange: defaultVisualRange,
-    predVisualRange: defaultPredVisualRange,
+    visualRange: this.defaultVisualRange,
+    predVisualRange: this.defaultPredVisualRange,
     fear: defaultFear,
     predatorSpeed: defaultPredSpeed,
     groups: defaultGroups,
-    flock: new FlockingSim(defaultNumBirds, defaultNumPredators, defaultGroups, width, height, depth)
+    flock: new FlockingSim(defaultNumBirds, defaultNumPredators, defaultGroups, this.width, this.height, depth)
   }
 
   lightLoc = [0, 0];
@@ -79,8 +72,8 @@ class FlockingGui extends React.Component {
     var svg = d3.select("#holder")
       .append("svg")
       .attr("id", "svg-sim")
-      .attr("width", width + (2 * margin))
-      .attr("height", height + (2 * margin));
+      .attr("width", this.width + (2 * margin))
+      .attr("height", this.height + (2 * margin));
 
     var defs = svg.append("defs")
 
@@ -183,15 +176,15 @@ class FlockingGui extends React.Component {
       .attr("id", "screen")
       .attr("x", 0)
       .attr("y", 0)
-      .attr("width", width + (2 * margin))
-      .attr("height", height + 2 * margin)
+      .attr("width", this.width + (2 * margin))
+      .attr("height", this.height + 2 * margin)
       .style("fill", "lightblue")
       .style("opacity", .7)
 
     svg.append("circle")
       .attr("id", "mouseLight")
-      .attr("cx", width / 2)
-      .attr("cy", height / 2)
+      .attr("cx", this.width / 2)
+      .attr("cy", this.height / 2)
       .attr("r", 0)
       .style("fill", "url('#lightGradient')")
 
@@ -206,8 +199,8 @@ class FlockingGui extends React.Component {
     svg.append("rect")
       .attr("x", margin)
       .attr("y", margin)
-      .attr("width", width)
-      .attr("height", height)
+      .attr("width", this.width)
+      .attr("height", this.height)
       .style("opacity", 0)
       .on("mousemove", (event) => {
         let ptr = d3.pointer(event)
@@ -465,8 +458,31 @@ class FlockingGui extends React.Component {
   }
 
   componentDidMount() {
+
+    var container = d3.select("#container").node().getBoundingClientRect()
+    console.log(container);
+    this.width = container.width - (3 * margin);
+    this.height = this.width * aspectRatio;
+    this.defaultVisualRange = this.width / 12;
+    this.defaultPredVisualRange = this.width / 12;
+
     this.setState({
-      createView: true
+      createView: true,
+      running: true,
+      resetPoints: false,
+      numBirds: defaultNumBirds,
+      numPredators: defaultNumPredators,
+      separation: defaultSeparation,
+      alignment: defaultAlignment,
+      cohesion: defaultCohesion,
+      momentum: defaultMomentum,
+      lightAttraction: defaultLightAttraction,
+      visualRange: this.defaultVisualRange,
+      predVisualRange: this.defaultPredVisualRange,
+      fear: defaultFear,
+      predatorSpeed: defaultPredSpeed,
+      groups: defaultGroups,
+      flock: new FlockingSim(defaultNumBirds, defaultNumPredators, defaultGroups, this.width, this.height, depth)
     })
   }
 
@@ -492,7 +508,7 @@ class FlockingGui extends React.Component {
     this.setState({
       running: false,
       numBirds: newValue,
-      flock: new FlockingSim(newValue, this.state.numPredators, this.state.groups, width, height, depth)
+      flock: new FlockingSim(newValue, this.state.numPredators, this.state.groups, this.width, this.height, depth)
     });
   };
 
@@ -500,7 +516,7 @@ class FlockingGui extends React.Component {
     this.setState({
       running: false,
       numPredators: newValue,
-      flock: new FlockingSim(this.state.numBirds, newValue, this.state.groups, width, height, depth)
+      flock: new FlockingSim(this.state.numBirds, newValue, this.state.groups, this.width, this.height, depth)
     });
   };
 
@@ -508,7 +524,7 @@ class FlockingGui extends React.Component {
     this.setState({
       running: false,
       groups: newValue,
-      flock: new FlockingSim(this.state.numBirds, this.state.numPredators, newValue, width, height, depth)
+      flock: new FlockingSim(this.state.numBirds, this.state.numPredators, newValue, this.width, this.height, depth)
     });
   };
 
@@ -608,12 +624,12 @@ class FlockingGui extends React.Component {
       alignment: defaultAlignment,
       cohesion: defaultCohesion,
       momentum: defaultMomentum,
-      visualRange: defaultVisualRange,
-      predVisualRange: defaultPredVisualRange,
+      visualRange: this.defaultVisualRange,
+      predVisualRange: this.defaultPredVisualRange,
       fear: defaultFear,
       predatorSpeed: defaultPredSpeed,
       groups: defaultGroups,
-      flock: new FlockingSim(defaultNumBirds, defaultNumPredators, defaultGroups, width, height, depth)
+      flock: new FlockingSim(defaultNumBirds, defaultNumPredators, defaultGroups, this.width, this.height, depth)
     });
   };
 
@@ -621,13 +637,13 @@ class FlockingGui extends React.Component {
     this.setState({
       running: false,
       resetPoints: true,
-      flock: new FlockingSim(this.state.numBirds, this.state.numPredators, this.state.groups, width, height, depth)
+      flock: new FlockingSim(this.state.numBirds, this.state.numPredators, this.state.groups, this.width, this.height, depth)
     });
   };
 
   render() {
     return (
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" id="container">
         <Grid container columnSpacing={2} className="params" columns={24}>
           <Grid item xs={4}>
             <p>Number of Birds</p>
@@ -661,7 +677,7 @@ class FlockingGui extends React.Component {
             <Slider 
               size="small"
               min={0}
-              max={width / 3}
+              max={this.width / 3}
               value={this.state.visualRange}
               onChange={this.handleVisualRangeChange}>
             </Slider>
@@ -689,7 +705,7 @@ class FlockingGui extends React.Component {
             <Slider 
               size="small"
               min={0}
-              max={width / 3}
+              max={this.width / 3}
               value={this.state.predVisualRange}
               color="secondary"
               onChange={this.handlePredVisualRangeChange}>
@@ -705,7 +721,6 @@ class FlockingGui extends React.Component {
               onChange={this.handlePredSpeedChange}>
             </Slider>
           </Grid>
-
 
           <Grid item xs={4}>
             <p>Separation</p>
@@ -956,7 +971,7 @@ class FlockingGui extends React.Component {
           <Grid item xs={5}/>
 
         </Grid>
-        
+       
 
         <div id="holder"/>
       </Container>

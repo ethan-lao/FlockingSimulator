@@ -8,6 +8,8 @@ This repository contains code for a flocking simulator built in TypeScript and d
 
 `npm install`
 
+May need --force
+
 ### Start app locally
 
 `npm start`
